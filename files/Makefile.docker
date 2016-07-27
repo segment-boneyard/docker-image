@@ -1,0 +1,24 @@
+# Use bash instead of /bin/sh.
+SHELL := /bin/bash
+
+# The runtime information.
+info.platform := $(shell uname -a)
+info.location := $(shell pwd)
+
+# print is a function that outputs a single argument on one line prefixed by
+# the '==> ' sequence and in color.
+print = printf '\033[1;34m==> $(1)\033[0m\n'
+
+# printv is a function that outputs a pair of a key and value, the value is
+# highlighted.
+printv = printf '$(1): \033[1m$(2)\033[0m\n'
+
+# do is a function that first prints the command passed as argument and then
+# executes it.
+do = $(call print,$(1)); $(1)
+
+# Define the `all` target as the default target, it should be overridden by
+# Makefiles including it.
+all:
+
+.PHONY: all
