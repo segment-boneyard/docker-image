@@ -2,24 +2,23 @@
 # integration.
 FROM ubuntu:16.04
 
-# install and upgrade command packages
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y apt-transport-https ca-certificates build-essential git curl libsystemd-dev
+# install dependencies
+RUN apt-get update && \
+    apt-get install -y apt-transport-https ca-certificates build-essential git curl libsystemd-dev
 
-# install docker
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-RUN echo "deb https://apt.dockerproject.org/repo ubuntu-wily main" > /etc/apt/sources.list.d/docker.list
-RUN apt-get update
-RUN apt-get install -y docker-engine=1.9.1-0~wily
-
-# install docker-compose
-RUN curl -s -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose
-RUN chmod +x /usr/local/bin/docker-compose
+# configure apt-get to install docker
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && \
+    echo "deb https://apt.dockerproject.org/repo ubuntu-wily main" > /etc/apt/sources.list.d/docker.list && \
+    curl -s -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose && \
+    apt-get update && \
+    apt-get install -y docker-engine=1.9.1-0~wily && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
 
 # tweaks
-RUN echo '151.101.36.162 registry.npmjs.com' >> /etc/hosts
-RUN echo '151.101.36.162 registry.npmjs.org' >> /etc/hosts
+RUN echo '151.101.36.162 registry.npmjs.com' >> /etc/hosts && \
+    echo '151.101.36.162 registry.npmjs.org' >> /etc/hosts
 
 # configure the container's entrypoint
 COPY files/Makefile.docker /usr/src/Makefile.docker
