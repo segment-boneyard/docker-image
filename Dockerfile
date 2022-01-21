@@ -1,6 +1,6 @@
 # This Dockerfile is used to build the base containers used for continuous
 # integration.
-FROM ubuntu:16.04
+FROM 528451384384.dkr.ecr.us-west-2.amazonaws.com/segment-alpine:3.15
 
 # install dependencies
 RUN apt-get update && \
